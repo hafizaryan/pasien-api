@@ -2,6 +2,14 @@
 
 API untuk manajemen data pasien Rumah Sakit Syafira yang dibangun menggunakan Laravel.
 
+## Instalasi dan Menjalankan API
+
+1. Pastikan Laragon atau XAMPP sudah aktif.
+2. Clone repository.
+3. Install dependencies: `composer install`.
+4. Jalankan migrasi: `php artisan migrate`.
+5. Jalankan server: `php artisan serve`.
+
 ## Base URL
 
 ```
@@ -425,14 +433,6 @@ function createPatient() {
 -   **404**: Not Found - Data tidak ditemukan
 -   **422**: Unprocessable Entity - Validation error
 -   **500**: Internal Server Error - Server error
-
-## Instalasi dan Menjalankan API
-
-1. Pastikan Laragon atau XAMPP sudah aktif.
-2. Clone repository.
-3. Install dependencies: `composer install`.
-4. Jalankan migrasi: `php artisan migrate`.
-5. Jalankan server: `php artisan serve`.
 
 API akan berjalan di `http://127.0.0.1:8000`
 
