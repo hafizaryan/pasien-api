@@ -16,22 +16,17 @@ API untuk manajemen data pasien Rumah Sakit Syafira yang dibangun menggunakan La
 http://127.0.0.1:8000/api
 ```
 
+## Sample Login
+
+username: admin@gmail.com
+password: admin123
+
 ## Headers
 
 ```
 Content-Type: application/json
 Accept: application/json
 ```
-
-## Setup dan Installation
-
-1. Clone repository
-2. Install dependencies: `composer install`
-3. Copy `.env.example` to `.env`
-4. Generate application key: `php artisan key:generate`
-5. Setup database configuration di `.env`
-6. Run migrations: `php artisan migrate`
-7. Start server: `php artisan serve`
 
 ## Authentication
 
