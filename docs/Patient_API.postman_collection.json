@@ -1,0 +1,193 @@
+{
+    "info": {
+        "name": "RS Syafira Patient API",
+        "description": "API untuk manajemen data pasien Rumah Sakit Syafira",
+        "version": "1.0.0",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://127.0.0.1:8000/api",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Get All Patients",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{base_url}}/patients",
+                    "host": ["{{base_url}}"],
+                    "path": ["patients"]
+                },
+                "description": "Mengambil semua data pasien dari database"
+            },
+            "response": [
+                {
+                    "name": "Success Response",
+                    "status": "OK",
+                    "code": 200,
+                    "body": "{\n    \"success\": true,\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"John Doe\",\n            \"nik\": \"1234567890123456\",\n            \"address\": \"Jl. Merdeka No. 123\",\n            \"phone\": \"081234567890\",\n            \"created_at\": \"2025-06-27T10:30:00.000000Z\",\n            \"updated_at\": \"2025-06-27T10:30:00.000000Z\"\n        }\n    ]\n}"
+                }
+            ]
+        },
+        {
+            "name": "Get Patient by ID",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{base_url}}/patients/1",
+                    "host": ["{{base_url}}"],
+                    "path": ["patients", "1"]
+                },
+                "description": "Mengambil data pasien berdasarkan ID"
+            },
+            "response": [
+                {
+                    "name": "Success Response",
+                    "status": "OK",
+                    "code": 200,
+                    "body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"John Doe\",\n        \"nik\": \"1234567890123456\",\n        \"address\": \"Jl. Merdeka No. 123\",\n        \"phone\": \"081234567890\",\n        \"created_at\": \"2025-06-27T10:30:00.000000Z\",\n        \"updated_at\": \"2025-06-27T10:30:00.000000Z\"\n    }\n}"
+                },
+                {
+                    "name": "Error Response - Not Found",
+                    "status": "Not Found",
+                    "code": 404,
+                    "body": "{\n    \"success\": false,\n    \"message\": \"Patient not found\"\n}"
+                }
+            ]
+        },
+        {
+            "name": "Create New Patient",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"name\": \"John Doe\",\n    \"nik\": \"1234567890123456\",\n    \"address\": \"Jl. Merdeka No. 123\",\n    \"phone\": \"081234567890\"\n}"
+                },
+                "url": {
+                    "raw": "{{base_url}}/patients",
+                    "host": ["{{base_url}}"],
+                    "path": ["patients"]
+                },
+                "description": "Membuat data pasien baru"
+            },
+            "response": [
+                {
+                    "name": "Success Response",
+                    "status": "Created",
+                    "code": 201,
+                    "body": "{\n    \"success\": true,\n    \"message\": \"Patient created successfully\",\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"John Doe\",\n        \"nik\": \"1234567890123456\",\n        \"address\": \"Jl. Merdeka No. 123\",\n        \"phone\": \"081234567890\",\n        \"created_at\": \"2025-06-27T10:30:00.000000Z\",\n        \"updated_at\": \"2025-06-27T10:30:00.000000Z\"\n    }\n}"
+                },
+                {
+                    "name": "Validation Error Response",
+                    "status": "Unprocessable Entity",
+                    "code": 422,
+                    "body": "{\n    \"success\": false,\n    \"message\": \"Validation failed\",\n    \"errors\": {\n        \"name\": [\"The name field is required.\"],\n        \"nik\": [\"The nik has already been taken.\"]\n    }\n}"
+                }
+            ]
+        },
+        {
+            "name": "Update Patient",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"name\": \"Jane Doe\",\n    \"phone\": \"089876543210\"\n}"
+                },
+                "url": {
+                    "raw": "{{base_url}}/patients/1",
+                    "host": ["{{base_url}}"],
+                    "path": ["patients", "1"]
+                },
+                "description": "Mengupdate data pasien yang sudah ada. Semua field bersifat opsional."
+            },
+            "response": [
+                {
+                    "name": "Success Response",
+                    "status": "OK",
+                    "code": 200,
+                    "body": "{\n    \"success\": true,\n    \"message\": \"Patient updated successfully\",\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Jane Doe\",\n        \"nik\": \"1234567890123456\",\n        \"address\": \"Jl. Merdeka No. 123\",\n        \"phone\": \"089876543210\",\n        \"created_at\": \"2025-06-27T10:30:00.000000Z\",\n        \"updated_at\": \"2025-06-27T11:30:00.000000Z\"\n    }\n}"
+                }
+            ]
+        },
+        {
+            "name": "Delete Patient",
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "url": {
+                    "raw": "{{base_url}}/patients/1",
+                    "host": ["{{base_url}}"],
+                    "path": ["patients", "1"]
+                },
+                "description": "Menghapus data pasien dari database"
+            },
+            "response": [
+                {
+                    "name": "Success Response",
+                    "status": "OK",
+                    "code": 200,
+                    "body": "{\n    \"success\": true,\n    \"message\": \"Patient deleted successfully\"\n}"
+                },
+                {
+                    "name": "Error Response",
+                    "status": "Internal Server Error",
+                    "code": 500,
+                    "body": "{\n    \"success\": false,\n    \"message\": \"Failed to delete patient\"\n}"
+                }
+            ]
+        }
+    ]
+}
