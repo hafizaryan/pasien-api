@@ -430,10 +430,8 @@ function createPatient() {
 
 1. Clone repository
 2. Install dependencies: `composer install`
-3. Copy `.env.example` ke `.env`
-4. Generate application key: `php artisan key:generate`
-5. Jalankan migrasi: `php artisan migrate`
-6. Jalankan server: `php artisan serve`
+3. Jalankan migrasi: `php artisan migrate`
+4. Jalankan server: `php artisan serve`
 
 API akan berjalan di `http://127.0.0.1:8000`
 
