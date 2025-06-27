@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RS Syafira - Patient API Documentation</title>
+    <title>RS Syafira - API Documentation</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -66,6 +66,11 @@
             color: white;
         }
 
+        .method.get { background: #2ecc71; }
+        .method.post { background: #3498db; }
+        .method.put { background: #f39c12; }
+        .method.delete { background: #e74c3c; }
+
         .endpoint-body {
             padding: 15px;
         }
@@ -91,6 +96,10 @@
             border-left: 4px solid;
             margin-bottom: 10px;
         }
+
+        .response-code.success { border-color: #2ecc71; background-color: #e8f8f0; }
+        .response-code.error { border-color: #e74c3c; background-color: #fdedec; }
+        .response-code.warning { border-color: #f39c12; background-color: #fef5e7; }
 
         .nav-tabs {
             display: flex;
@@ -198,7 +207,7 @@
     <div class="container">
         <div class="header">
             <h1>Rumah Sakit Syafira</h1>
-            <p>Patient API Documentation</p>
+            <p>API Documentation</p>
         </div>
 
         <div class="base-url">
@@ -207,7 +216,8 @@
 
         <div class="nav-tabs">
             <button class="nav-tab active" onclick="switchTab('overview')">Overview</button>
-            <button class="nav-tab" onclick="switchTab('endpoints')">Endpoints</button>
+            <button class="nav-tab" onclick="switchTab('auth')">Authentication</button>
+            <button class="nav-tab" onclick="switchTab('patients')">Patients</button>
             <button class="nav-tab" onclick="switchTab('testing')">Try It</button>
         </div>
 
@@ -218,7 +228,7 @@
                     operasi CRUD (Create, Read, Update, Delete) untuk data pasien.</p>
 
                 <h3>Authentication</h3>
-                <p>Saat ini API tidak memerlukan autentikasi khusus.</p>
+                <p>Sebagian endpoint memerlukan autentikasi menggunakan token Bearer.</p>
 
                 <h3>Content Type</h3>
                 <p>Semua request dan response menggunakan format JSON.</p>
@@ -226,7 +236,8 @@
                 <h3>Headers</h3>
                 <div class="code-block">
                     <pre>Content-Type: application/json
-Accept: application/json</pre>
+Accept: application/json
+Authorization: Bearer {token}  // Untuk endpoint yang membutuhkan autentikasi</pre>
                 </div>
 
                 <h3>Response Format</h3>
@@ -241,9 +252,277 @@ Accept: application/json</pre>
             </div>
         </div>
 
-        <div id="endpoints" class="tab-content">
+        <div id="auth" class="tab-content">
             <div class="section">
-                <h2>Endpoints</h2>
+                <h2>Authentication API</h2>
+
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span>/auth/signup</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <p><strong>Deskripsi:</strong> Mendaftarkan pengguna baru</p>
+                        <p><strong>URL:</strong> http://127.0.0.1:8000/api/auth/signup</p>
+
+                        <h4>Request Body:</h4>
+                        <div class="code-block">
+                            <pre>{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+}</pre>
+                        </div>
+
+                        <h4>Response:</h4>
+                        <div class="response-codes">
+                            <div class="response-code success">
+                                <strong>201 Created</strong>
+                                <div class="code-block">
+                                    <pre>{
+    "success": true,
+    "message": "User registered successfully",
+    "data": {
+        "user": {
+            "id": 1,
+            "name": "John Doe",
+            "email": "john@example.com",
+            "created_at": "2025-06-27T04:45:00.000000Z"
+        },
+        "token": "1|abcd1234...",
+        "token_type": "Bearer"
+    }
+}</pre>
+                                </div>
+                            </div>
+                            <div class="response-code warning">
+                                <strong>422 Validation Error</strong>
+                                <div class="code-block">
+                                    <pre>{
+    "success": false,
+    "message": "Validation failed",
+    "errors": {
+        "email": ["The email has already been taken."],
+        "password": ["The password confirmation does not match."]
+    }
+}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span>/auth/login</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <p><strong>Deskripsi:</strong> Login pengguna</p>
+                        <p><strong>URL:</strong> http://127.0.0.1:8000/api/auth/login</p>
+
+                        <h4>Request Body:</h4>
+                        <div class="code-block">
+                            <pre>{
+    "email": "john@example.com",
+    "password": "password123"
+}</pre>
+                        </div>
+
+                        <h4>Response:</h4>
+                        <div class="response-codes">
+                            <div class="response-code success">
+                                <strong>200 OK</strong>
+                                <div class="code-block">
+                                    <pre>{
+    "success": true,
+    "message": "Login successful",
+    "data": {
+        "user": {
+            "id": 1,
+            "name": "John Doe",
+            "email": "john@example.com"
+        },
+        "token": "2|xyz9876...",
+        "token_type": "Bearer"
+    }
+}</pre>
+                                </div>
+                            </div>
+                            <div class="response-code error">
+                                <strong>401 Unauthorized</strong>
+                                <div class="code-block">
+                                    <pre>{
+    "success": false,
+    "message": "Invalid credentials"
+}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span>/auth/logout</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <p><strong>Deskripsi:</strong> Logout pengguna (memerlukan autentikasi)</p>
+                        <p><strong>URL:</strong> http://127.0.0.1:8000/api/auth/logout</p>
+
+                        <h4>Headers:</h4>
+                        <div class="code-block">
+                            <pre>Authorization: Bearer {your_token_here}</pre>
+                        </div>
+
+                        <h4>Response:</h4>
+                        <div class="response-codes">
+                            <div class="response-code success">
+                                <strong>200 OK</strong>
+                                <div class="code-block">
+                                    <pre>{
+    "success": true,
+    "message": "Logout successful"
+}</pre>
+                                </div>
+                            </div>
+                            <div class="response-code error">
+                                <strong>401 Unauthorized</strong>
+                                <div class="code-block">
+                                    <pre>{
+    "success": false,
+    "message": "Unauthenticated"
+}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span>/auth/profile</span>
+                    </div>
+                    <div class="endpoint-body">
+                        <p><strong>Deskripsi:</strong> Mendapatkan profil pengguna (memerlukan autentikasi)</p>
+                        <p><strong>URL:</strong> http://127.0.0.1:8000/api/auth/profile</p>
+
+                        <h4>Headers:</h4>
+                        <div class="code-block">
+                            <pre>Authorization: Bearer {your_token_here}</pre>
+                        </div>
+
+                        <h4>Response:</h4>
+                        <div class="response-codes">
+                            <div class="response-code success">
+                                <strong>200 OK</strong>
+                                <div class="code-block">
+                                    <pre>{
+    "success": true,
+    "message": "Profile retrieved successfully",
+    "data": {
+        "user": {
+            "id": 1,
+            "name": "John Doe",
+            "email": "john@example.com",
+            "created_at": "2025-06-27T04:45:00.000000Z",
+            "updated_at": "2025-06-27T04:45:00.000000Z"
+        }
+    }
+}</pre>
+                                </div>
+                            </div>
+                            <div class="response-code error">
+                                <strong>401 Unauthorized</strong>
+                                <div class="code-block">
+                                    <pre>{
+    "success": false,
+    "message": "Unauthenticated"
+}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Usage Examples</h3>
+
+                <h4>Using cURL</h4>
+                <div class="code-block">
+                    <pre># Sign Up
+curl -X POST http://127.0.0.1:8000/api/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+  }'
+
+# Login
+curl -X POST http://127.0.0.1:8000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "john@example.com",
+    "password": "password123"
+  }'
+
+# Get Profile
+curl -X GET http://127.0.0.1:8000/api/auth/profile \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+
+# Logout
+curl -X POST http://127.0.0.1:8000/api/auth/logout \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"</pre>
+                </div>
+
+                <h4>Using JavaScript/Fetch</h4>
+                <div class="code-block">
+                    <pre>// Sign Up
+const signupResponse = await fetch("http://127.0.0.1:8000/api/auth/signup", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+        name: "John Doe",
+        email: "john@example.com",
+        password: "password123",
+        password_confirmation: "password123",
+    }),
+});
+
+// Login
+const loginResponse = await fetch("http://127.0.0.1:8000/api/auth/login", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+        email: "john@example.com",
+        password: "password123",
+    }),
+});
+const { token } = (await loginResponse.json()).data;
+
+// Get Profile
+const profileResponse = await fetch("http://127.0.0.1:8000/api/auth/profile", {
+    method: "GET",
+    headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+    },
+});</pre>
+                </div>
+            </div>
+        </div>
+
+        <div id="patients" class="tab-content">
+            <div class="section">
+                <h2>Patient Endpoints</h2>
 
                 <div class="endpoint">
                     <div class="endpoint-header">
@@ -474,128 +753,100 @@ Accept: application/json</pre>
             </div>
         </div>
 
-        <div id="examples" class="tab-content">
-            <div class="section">
-                <h2>Examples</h2>
-
-                <h3>JavaScript (Fetch API)</h3>
-                <div class="code-block">
-                    <pre>// Get all patients
-fetch('http://127.0.0.1:8000/api/patients', {
-    method: 'GET',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    }
-})
-.then(response => response.json())
-.then(data => console.log(data))
-.catch(error => console.error('Error:', error));
-
-// Create new patient
-fetch('http://127.0.0.1:8000/api/patients', {
-    method: 'POST',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        name: 'John Doe',
-        nik: '1234567890123456',
-        address: 'Jl. Merdeka No. 123',
-        phone: '081234567890'
-    })
-})
-.then(response => response.json())
-.then(data => console.log(data))
-.catch(error => console.error('Error:', error));</pre>
-                </div>
-
-                <h3>cURL</h3>
-                <div class="code-block">
-                    <pre># Get all patients
-curl -X GET "http://127.0.0.1:8000/api/patients" \
--H "Accept: application/json" \
--H "Content-Type: application/json"
-
-# Create new patient
-curl -X POST "http://127.0.0.1:8000/api/patients" \
--H "Accept: application/json" \
--H "Content-Type: application/json" \
--d '{
-    "name": "John Doe",
-    "nik": "1234567890123456",
-    "address": "Jl. Merdeka No. 123",
-    "phone": "081234567890"
-}'</pre>
-                </div>
-
-                <h3>Google Apps Script</h3>
-                <div class="code-block">
-                    <pre>function getAllPatients() {
-    const url = 'http://127.0.0.1:8000/api/patients';
-    const options = {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-    };
-    
-    try {
-        const response = UrlFetchApp.fetch(url, options);
-        const data = JSON.parse(response.getContentText());
-        console.log(data);
-        return data;
-    } catch (error) {
-        console.error('Error:', error);
-        return null;
-    }
-}</pre>
-                </div>
-            </div>
-        </div>
-
         <div id="testing" class="tab-content">
             <div class="section">
                 <h2>Try It Out</h2>
 
                 <div class="try-it-section">
-                    <h4>Get All Patients</h4>
-                    <button class="btn" onclick="getAllPatients()">Get All Patients</button>
-                    <div id="getAllResult" class="result"></div>
+                    <h3>Authentication</h3>
+                    
+                    <div class="try-it-section">
+                        <h4>Sign Up</h4>
+                        <div class="form-group">
+                            <label>Name:</label>
+                            <input type="text" id="signupName" placeholder="Your name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email:</label>
+                            <input type="email" id="signupEmail" placeholder="Your email">
+                        </div>
+                        <div class="form-group">
+                            <label>Password:</label>
+                            <input type="password" id="signupPassword" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password:</label>
+                            <input type="password" id="signupPasswordConfirmation" placeholder="Confirm password">
+                        </div>
+                        <button class="btn" onclick="signup()">Sign Up</button>
+                        <div id="signupResult" class="result"></div>
+                    </div>
+
+                    <div class="try-it-section">
+                        <h4>Login</h4>
+                        <div class="form-group">
+                            <label>Email:</label>
+                            <input type="email" id="loginEmail" placeholder="Your email">
+                        </div>
+                        <div class="form-group">
+                            <label>Password:</label>
+                            <input type="password" id="loginPassword" placeholder="Password">
+                        </div>
+                        <button class="btn" onclick="login()">Login</button>
+                        <div id="loginResult" class="result"></div>
+                    </div>
+
+                    <div class="try-it-section">
+                        <h4>Get Profile (Requires Token)</h4>
+                        <div class="form-group">
+                            <label>Token:</label>
+                            <input type="text" id="profileToken" placeholder="Paste your token here">
+                        </div>
+                        <button class="btn" onclick="getProfile()">Get Profile</button>
+                        <div id="profileResult" class="result"></div>
+                    </div>
                 </div>
 
                 <div class="try-it-section">
-                    <h4>Get Patient by ID</h4>
-                    <div class="form-group">
-                        <label>Patient ID:</label>
-                        <input type="number" id="getPatientId" placeholder="Enter patient ID">
+                    <h3>Patients</h3>
+                    
+                    <div class="try-it-section">
+                        <h4>Get All Patients</h4>
+                        <button class="btn" onclick="getAllPatients()">Get All Patients</button>
+                        <div id="getAllResult" class="result"></div>
                     </div>
-                    <button class="btn" onclick="getPatientById()">Get Patient</button>
-                    <div id="getPatientResult" class="result"></div>
-                </div>
 
-                <div class="try-it-section">
-                    <h4>Create New Patient</h4>
-                    <div class="form-group">
-                        <label>Name:</label>
-                        <input type="text" id="createName" placeholder="Patient name">
+                    <div class="try-it-section">
+                        <h4>Get Patient by ID</h4>
+                        <div class="form-group">
+                            <label>Patient ID:</label>
+                            <input type="number" id="getPatientId" placeholder="Enter patient ID">
+                        </div>
+                        <button class="btn" onclick="getPatientById()">Get Patient</button>
+                        <div id="getPatientResult" class="result"></div>
                     </div>
-                    <div class="form-group">
-                        <label>NIK:</label>
-                        <input type="text" id="createNik" placeholder="NIK (16 digits)">
+
+                    <div class="try-it-section">
+                        <h4>Create New Patient</h4>
+                        <div class="form-group">
+                            <label>Name:</label>
+                            <input type="text" id="createName" placeholder="Patient name">
+                        </div>
+                        <div class="form-group">
+                            <label>NIK:</label>
+                            <input type="text" id="createNik" placeholder="NIK (16 digits)">
+                        </div>
+                        <div class="form-group">
+                            <label>Address:</label>
+                            <textarea id="createAddress" placeholder="Patient address"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone:</label>
+                            <input type="text" id="createPhone" placeholder="Phone number">
+                        </div>
+                        <button class="btn" onclick="createPatient()">Create Patient</button>
+                        <div id="createPatientResult" class="result"></div>
                     </div>
-                    <div class="form-group">
-                        <label>Address:</label>
-                        <textarea id="createAddress" placeholder="Patient address"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Phone:</label>
-                        <input type="text" id="createPhone" placeholder="Phone number">
-                    </div>
-                    <button class="btn" onclick="createPatient()">Create Patient</button>
-                    <div id="createPatientResult" class="result"></div>
                 </div>
             </div>
         </div>
@@ -603,6 +854,7 @@ curl -X POST "http://127.0.0.1:8000/api/patients" \
 
     <script>
         const BASE_URL = 'http://127.0.0.1:8000/api';
+        let authToken = '';
 
         function switchTab(tabName) {
             // Hide all tab contents
@@ -627,6 +879,111 @@ curl -X POST "http://127.0.0.1:8000/api/patients" \
             resultElement.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
         }
 
+        // Authentication functions
+        async function signup() {
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const passwordConfirmation = document.getElementById('signupPasswordConfirmation').value;
+
+            if (!name || !email || !password || !passwordConfirmation) {
+                showResult('signupResult', {
+                    error: 'Please fill all fields'
+                }, false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BASE_URL}/auth/signup`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        password: password,
+                        password_confirmation: passwordConfirmation
+                    })
+                });
+
+                const data = await response.json();
+                showResult('signupResult', data, response.ok);
+            } catch (error) {
+                showResult('signupResult', {
+                    error: error.message
+                }, false);
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showResult('loginResult', {
+                    error: 'Please fill all fields'
+                }, false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+                showResult('loginResult', data, response.ok);
+                
+                if (response.ok && data.data && data.data.token) {
+                    authToken = data.data.token;
+                    document.getElementById('profileToken').value = authToken;
+                }
+            } catch (error) {
+                showResult('loginResult', {
+                    error: error.message
+                }, false);
+            }
+        }
+
+        async function getProfile() {
+            const token = document.getElementById('profileToken').value || authToken;
+            if (!token) {
+                showResult('profileResult', {
+                    error: 'Please login first or provide a token'
+                }, false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BASE_URL}/auth/profile`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                const data = await response.json();
+                showResult('profileResult', data, response.ok);
+            } catch (error) {
+                showResult('profileResult', {
+                    error: error.message
+                }, false);
+            }
+        }
+
+        // Patient functions
         async function getAllPatients() {
             try {
                 const response = await fetch(`${BASE_URL}/patients`, {

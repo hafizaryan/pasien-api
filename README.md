@@ -23,6 +23,134 @@ Content-Type: application/json
 Accept: application/json
 ```
 
+## Setup dan Installation
+
+1. Clone repository
+2. Install dependencies: `composer install`
+3. Copy `.env.example` to `.env`
+4. Generate application key: `php artisan key:generate`
+5. Setup database configuration di `.env`
+6. Run migrations: `php artisan migrate`
+7. Start server: `php artisan serve`
+
+## Authentication
+
+API ini menggunakan Laravel Sanctum untuk authentication dengan Bearer Token.
+
+### Authentication Endpoints
+
+#### 1. Sign Up (Register)
+
+**Endpoint:** `POST /auth/signup`
+
+**Request Body:**
+
+```json
+{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+}
+```
+
+**Response Success (201):**
+
+```json
+{
+    "success": true,
+    "message": "User registered successfully",
+    "data": {
+        "user": {
+            "id": 1,
+            "name": "John Doe",
+            "email": "john@example.com",
+            "created_at": "2025-06-27T04:45:00.000000Z"
+        },
+        "token": "1|abcd1234...",
+        "token_type": "Bearer"
+    }
+}
+```
+
+#### 2. Login
+
+**Endpoint:** `POST /auth/login`
+
+**Request Body:**
+
+```json
+{
+    "email": "john@example.com",
+    "password": "password123"
+}
+```
+
+**Response Success (200):**
+
+```json
+{
+    "success": true,
+    "message": "Login successful",
+    "data": {
+        "user": {
+            "id": 1,
+            "name": "John Doe",
+            "email": "john@example.com"
+        },
+        "token": "2|xyz9876...",
+        "token_type": "Bearer"
+    }
+}
+```
+
+#### 3. Get Profile (Protected)
+
+**Endpoint:** `GET /auth/profile`
+
+**Headers:**
+
+```
+Authorization: Bearer {your_token_here}
+```
+
+**Response Success (200):**
+
+```json
+{
+    "success": true,
+    "message": "Profile retrieved successfully",
+    "data": {
+        "user": {
+            "id": 1,
+            "name": "John Doe",
+            "email": "john@example.com",
+            "created_at": "2025-06-27T04:45:00.000000Z",
+            "updated_at": "2025-06-27T04:45:00.000000Z"
+        }
+    }
+}
+```
+
+#### 4. Logout (Protected)
+
+**Endpoint:** `POST /auth/logout`
+
+**Headers:**
+
+```
+Authorization: Bearer {your_token_here}
+```
+
+**Response Success (200):**
+
+```json
+{
+    "success": true,
+    "message": "Logout successful"
+}
+```
+
 ## Endpoints
 
 ### 1. Get All Patients
@@ -436,6 +564,93 @@ function createPatient() {
 
 API akan berjalan di `http://127.0.0.1:8000`
 
-## License
+## Testing
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 1. Web Interface Testing
+
+Anda dapat menggunakan interface web untuk testing yang sudah tersedia di:
+
+**URL:** `http://127.0.0.1:8000/auth-test.html`
+
+Interface ini menyediakan form untuk testing semua endpoint authentication:
+
+-   Sign Up
+-   Login
+-   Get Profile
+-   Logout
+
+### 2. Postman Collection
+
+Import file collection Postman yang tersedia di:
+
+-   `/docs/Auth_API.postman_collection.json` - untuk testing authentication endpoints
+-   `/docs/Patient_API.postman_collection.json` - untuk testing patient endpoints
+
+### 3. Command Line Testing
+
+#### Authentication dengan cURL/PowerShell
+
+**Sign Up:**
+
+```bash
+curl -X POST "http://127.0.0.1:8000/api/auth/signup" \
+-H "Content-Type: application/json" \
+-d '{
+    "name": "Test User",
+    "email": "test@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+}'
+```
+
+**Login:**
+
+```bash
+curl -X POST "http://127.0.0.1:8000/api/auth/login" \
+-H "Content-Type: application/json" \
+-d '{
+    "email": "test@example.com",
+    "password": "password123"
+}'
+```
+
+**Get Profile (with token):**
+
+```bash
+curl -X GET "http://127.0.0.1:8000/api/auth/profile" \
+-H "Authorization: Bearer YOUR_TOKEN_HERE"
+```
+
+#### PowerShell Examples
+
+**Sign Up:**
+
+```powershell
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/auth/signup" -Method POST -ContentType "application/json" -Body '{"name": "Test User", "email": "test@example.com", "password": "password123", "password_confirmation": "password123"}'
+```
+
+**Login:**
+
+```powershell
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/auth/login" -Method POST -ContentType "application/json" -Body '{"email": "test@example.com", "password": "password123"}'
+```
+
+## Error Handling
+
+API menggunakan format error response yang konsisten:
+
+```json
+{
+    "success": false,
+    "message": "Error description",
+    "errors": {} // Optional validation errors
+}
+```
+
+**HTTP Status Codes:**
+
+-   200: Success
+-   201: Created (successful registration)
+-   401: Unauthorized (invalid credentials or token)
+-   422: Validation Error
+-   500: Server Error
