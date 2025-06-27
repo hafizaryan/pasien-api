@@ -6,9 +6,11 @@ API untuk manajemen data pasien Rumah Sakit Syafira yang dibangun menggunakan La
 
 1. Pastikan Laragon atau XAMPP sudah aktif.
 2. Clone repository.
-3. Install dependencies: `composer install`.
-4. Jalankan migrasi: `php artisan migrate`.
-5. Jalankan server: `php artisan serve`.
+3. Pastikan Composer sudah terinstall.
+4. Install dependencies: `composer install`.
+5. Tambahkan database di MySql dengan nama `pasien_db`.
+6. Jalankan migrasi: `php artisan migrate`.
+7. Jalankan server: `php artisan serve`.
 
 ## Base URL
 
@@ -42,8 +44,8 @@ API ini menggunakan Laravel Sanctum untuk authentication dengan Bearer Token.
 
 ```json
 {
-    "name": "John Doe",
-    "email": "john@example.com",
+    "name": "Hafiz Aryan",
+    "email": "hafiz@example.com",
     "password": "password123",
     "password_confirmation": "password123"
 }
@@ -58,8 +60,8 @@ API ini menggunakan Laravel Sanctum untuk authentication dengan Bearer Token.
     "data": {
         "user": {
             "id": 1,
-            "name": "John Doe",
-            "email": "john@example.com",
+            "name": "Hafiz Aryan",
+            "email": "hafiz@example.com",
             "created_at": "2025-06-27T04:45:00.000000Z"
         },
         "token": "1|abcd1234...",
@@ -76,7 +78,7 @@ API ini menggunakan Laravel Sanctum untuk authentication dengan Bearer Token.
 
 ```json
 {
-    "email": "john@example.com",
+    "email": "hafiz@example.com",
     "password": "password123"
 }
 ```
@@ -90,8 +92,8 @@ API ini menggunakan Laravel Sanctum untuk authentication dengan Bearer Token.
     "data": {
         "user": {
             "id": 1,
-            "name": "John Doe",
-            "email": "john@example.com"
+            "name": "Hafiz Aryan",
+            "email": "hafiz@example.com"
         },
         "token": "2|xyz9876...",
         "token_type": "Bearer"
@@ -99,35 +101,7 @@ API ini menggunakan Laravel Sanctum untuk authentication dengan Bearer Token.
 }
 ```
 
-#### 3. Get Profile (Protected)
-
-**Endpoint:** `GET /auth/profile`
-
-**Headers:**
-
-```
-Authorization: Bearer {your_token_here}
-```
-
-**Response Success (200):**
-
-```json
-{
-    "success": true,
-    "message": "Profile retrieved successfully",
-    "data": {
-        "user": {
-            "id": 1,
-            "name": "John Doe",
-            "email": "john@example.com",
-            "created_at": "2025-06-27T04:45:00.000000Z",
-            "updated_at": "2025-06-27T04:45:00.000000Z"
-        }
-    }
-}
-```
-
-#### 4. Logout (Protected)
+#### 3. Logout (Protected)
 
 **Endpoint:** `POST /auth/logout`
 
@@ -164,7 +138,7 @@ Mengambil semua data pasien.
     "data": [
         {
             "id": 1,
-            "name": "John Doe",
+            "name": "Hafiz Aryan",
             "nik": "1234567890123456",
             "address": "Jl. Merdeka No. 123",
             "phone": "081234567890",
@@ -199,7 +173,7 @@ Mengambil data pasien berdasarkan ID.
     "success": true,
     "data": {
         "id": 1,
-        "name": "John Doe",
+        "name": "Hafiz Aryan",
         "nik": "1234567890123456",
         "address": "Jl. Merdeka No. 123",
         "phone": "081234567890",
@@ -230,7 +204,7 @@ Membuat data pasien baru.
 
 ```json
 {
-    "name": "John Doe",
+    "name": "Hafiz Aryan",
     "nik": "1234567890123456",
     "address": "Jl. Merdeka No. 123",
     "phone": "081234567890"
@@ -240,9 +214,9 @@ Membuat data pasien baru.
 **Validation Rules:**
 
 -   `name`: Required, string, maksimal 255 karakter
--   `nik`: Required, string, unique, maksimal 20 karakter
+-   `nik`: Required, string, unique, maksimal 16 karakter
 -   `address`: Required, string
--   `phone`: Required, string, maksimal 20 karakter
+-   `phone`: Required, string, maksimal 13 karakter
 
 **Response Success (201):**
 
@@ -252,7 +226,7 @@ Membuat data pasien baru.
     "message": "Patient created successfully",
     "data": {
         "id": 1,
-        "name": "John Doe",
+        "name": "Hafiz Aryan",
         "nik": "1234567890123456",
         "address": "Jl. Merdeka No. 123",
         "phone": "081234567890",
@@ -426,7 +400,7 @@ curl -X POST "http://127.0.0.1:8000/api/patients" \
 -H "Accept: application/json" \
 -H "Content-Type: application/json" \
 -d '{
-    "name": "John Doe",
+    "name": "Hafiz Aryan",
     "nik": "1234567890123456",
     "address": "Jl. Merdeka No. 123",
     "phone": "081234567890"
@@ -480,7 +454,7 @@ fetch("http://127.0.0.1:8000/api/patients", {
         "Content-Type": "application/json",
     },
     body: JSON.stringify({
-        name: "John Doe",
+        name: "Hafiz Aryan",
         nik: "1234567890123456",
         address: "Jl. Merdeka No. 123",
         phone: "081234567890",
@@ -522,7 +496,7 @@ function getAllPatients() {
 function createPatient() {
     const url = "http://127.0.0.1:8000/api/patients";
     const payload = {
-        name: "John Doe",
+        name: "Hafiz Aryan",
         nik: "1234567890123456",
         address: "Jl. Merdeka No. 123",
         phone: "081234567890",
@@ -558,94 +532,3 @@ function createPatient() {
 -   **500**: Internal Server Error - Server error
 
 API akan berjalan di `http://127.0.0.1:8000`
-
-## Testing
-
-### 1. Web Interface Testing
-
-Anda dapat menggunakan interface web untuk testing yang sudah tersedia di:
-
-**URL:** `http://127.0.0.1:8000/auth-test.html`
-
-Interface ini menyediakan form untuk testing semua endpoint authentication:
-
--   Sign Up
--   Login
--   Get Profile
--   Logout
-
-### 2. Postman Collection
-
-Import file collection Postman yang tersedia di:
-
--   `/docs/Auth_API.postman_collection.json` - untuk testing authentication endpoints
--   `/docs/Patient_API.postman_collection.json` - untuk testing patient endpoints
-
-### 3. Command Line Testing
-
-#### Authentication dengan cURL/PowerShell
-
-**Sign Up:**
-
-```bash
-curl -X POST "http://127.0.0.1:8000/api/auth/signup" \
--H "Content-Type: application/json" \
--d '{
-    "name": "Test User",
-    "email": "test@example.com",
-    "password": "password123",
-    "password_confirmation": "password123"
-}'
-```
-
-**Login:**
-
-```bash
-curl -X POST "http://127.0.0.1:8000/api/auth/login" \
--H "Content-Type: application/json" \
--d '{
-    "email": "test@example.com",
-    "password": "password123"
-}'
-```
-
-**Get Profile (with token):**
-
-```bash
-curl -X GET "http://127.0.0.1:8000/api/auth/profile" \
--H "Authorization: Bearer YOUR_TOKEN_HERE"
-```
-
-#### PowerShell Examples
-
-**Sign Up:**
-
-```powershell
-Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/auth/signup" -Method POST -ContentType "application/json" -Body '{"name": "Test User", "email": "test@example.com", "password": "password123", "password_confirmation": "password123"}'
-```
-
-**Login:**
-
-```powershell
-Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/auth/login" -Method POST -ContentType "application/json" -Body '{"email": "test@example.com", "password": "password123"}'
-```
-
-## Error Handling
-
-API menggunakan format error response yang konsisten:
-
-```json
-{
-    "success": false,
-    "message": "Error description",
-    "errors": {} // Optional validation errors
-}
-```
-
-**HTTP Status Codes:**
-
--   200: Success
--   201: Created (successful registration)
--   401: Unauthorized (invalid credentials or token)
--   422: Validation Error
--   500: Server Error
