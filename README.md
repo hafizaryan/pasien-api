@@ -428,10 +428,11 @@ function createPatient() {
 
 ## Instalasi dan Menjalankan API
 
-1. Clone repository
-2. Install dependencies: `composer install`
-3. Jalankan migrasi: `php artisan migrate`
-4. Jalankan server: `php artisan serve`
+1. Pastikan Laragon atau XAMPP sudah aktif.
+2. Clone repository.
+3. Install dependencies: `composer install`.
+4. Jalankan migrasi: `php artisan migrate`.
+5. Jalankan server: `php artisan serve`.
 
 API akan berjalan di `http://127.0.0.1:8000`
 
