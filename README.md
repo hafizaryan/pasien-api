@@ -244,15 +244,6 @@ Menghapus data pasien.
 }
 ```
 
-## Quick Access Links
-
--   **📖 Interactive API Documentation**: [http://127.0.0.1:8000/api-docs](http://127.0.0.1:8000/api-docs)
--   **📊 API Status**: [http://127.0.0.1:8000/api/status](http://127.0.0.1:8000/api/status)
--   **💊 Health Check**: [http://127.0.0.1:8000/api/health](http://127.0.0.1:8000/api/health)
--   **📈 Statistics**: [http://127.0.0.1:8000/api/statistics](http://127.0.0.1:8000/api/statistics)
--   **📦 Postman Collection**: [Download Collection](http://127.0.0.1:8000/docs/postman)
--   **🔗 Google Integration Guide**: [View Guide](http://127.0.0.1:8000/docs/google-integration)
-
 ## API Status Endpoints
 
 ### Get API Status
@@ -369,8 +360,6 @@ fetch("http://127.0.0.1:8000/api/patients", {
     .catch((error) => console.error("Error:", error));
 ```
 
-## Contoh Penggunaan dengan Google Apps Script
-
 ### Get All Patients
 
 ```javascript
@@ -447,10 +436,6 @@ function createPatient() {
 6. Jalankan server: `php artisan serve`
 
 API akan berjalan di `http://127.0.0.1:8000`
-
-## Keamanan dan CORS
-
-Untuk mengakses API dari domain eksternal (seperti Google Apps Script), pastikan untuk mengkonfigurasi CORS di Laravel jika diperlukan.
 
 ## License
 
